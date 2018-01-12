@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>imgInput</title>
+    <link rel="stylesheet" href="static/layui/css/layui.css" media="all">
+    <script src="static/jquery.min.js"></script>
+</head>
+<style type="text/css" media="screen">
+iframe {
+    border: 1px solid #e6e6e6;
+    margin-bottom: 15px;
+}
+
+.main {
+    margin: 20px auto
+}
+
+.img_preview {
+    width: calc(100% - 15px);
+    height: 150px;
+    border: 1px solid #e6e6e6;
+    margin-bottom: 15px;
+}
+
+.img_preview img {
+    max-width: calc(100% - 15px);
+    max-height: 150px;
+}
+
+.load_img {
+    text-align: center
+}
+
+.img_preview+button {
+    position: relative;
+}
+
+.img_preview+button input[type=file] {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>
+
+<body>
+    <div class="layui-container main">
+        <div class="layui-row">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-col-xs6">
+                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入内容" class="layui-input ">
+                    </div>
+                    <button type="button" class="layui-btn" style="margin-left: 15px"><i class="layui-icon" style="font-size: 30px;color:#fff;">&#xe615;</i></button>
+                </div>
+            </form>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <iframe src="" style="width:100%;min-height: 500px">
+                </iframe>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs4 load_img">
+                <div class="img_preview"><img src="" alt=""></div>
+                <button type="file" class="layui-btn">
+                    <input type="file">
+                    <i class="layui-icon">&#xe61f;</i>添加
+                </button>
+            </div>
+            <div class="layui-col-xs4 load_img">
+                <div class="img_preview"><img src="" alt=""></div>
+                <button type="file" class="layui-btn">
+                    <input type="file">
+                    <i class="layui-icon">&#xe61f;</i>添加
+                </button>
+            </div>
+            <div class="layui-col-xs4 load_img">
+                <div class="img_preview"><img src="" alt=""></div>
+                <button type="file" class="layui-btn">
+                    <input type="file">
+                    <i class="layui-icon">&#xe61f;</i>添加
+                </button>
+            </div>
+        </div>
+        <div class="layui-row" style="text-align: center;margin-top: 15px">
+         <button class="layui-btn"><i class="layui-icon">&#xe67c;</i>确定</button>
+         </div>
+    </div>
+    <script src="static/layui/layui.js"></script>
+    <script>
+
+    $('input[type=file]').on('change', function() {
+        var objUrl = getObjectURL(this.files[0]);
+        if (objUrl) {
+            $(this).parents('.load_img').find('img').attr("src", objUrl);
+        }
+    })
+
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+    </script>
+</body>
+
+</html>

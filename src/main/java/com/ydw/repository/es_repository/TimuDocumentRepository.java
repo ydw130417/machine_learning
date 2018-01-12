@@ -14,5 +14,7 @@ public interface TimuDocumentRepository extends ElasticsearchRepository<TimuDocu
 
 
      Page<TimuDocument> findTimuDocumentsByFirstContentLike(String words, Pageable pageable);
+     Page<TimuDocument> findTimuDocumentsByFirstContentContains(String words, Pageable pageable);
+     List<TimuDocument> findTimuDocumentsByFirstContentLike(String words);
 
 }

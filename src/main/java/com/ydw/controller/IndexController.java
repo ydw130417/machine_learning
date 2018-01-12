@@ -31,11 +31,6 @@ public class IndexController {
     @Autowired
     TransportClient client;
 
-    @RequestMapping("/index")
-    public @ResponseBody
-    String test() {
-        return "hello";
-    }
 
     @RequestMapping("/page")
     public @ResponseBody
@@ -76,13 +71,10 @@ public class IndexController {
 //                .setExplain(false)
 //                .get();
 //        SearchHit[] hits = searchResponse.getHits().getHits();
-        List<TimuDocument> timuDocumentsByFirstContentLike = null;
-//        try {
-//            timuDocumentsByFirstContentLike = timuDocumentRepository.findTimuDocumentsByFirstContentLike(words);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        return JSON.toJSON(timuDocumentsByFirstContentLike);
+        Page<TimuDocument> timuDocumentsByFirstContentLike = timuDocumentRepository.findTimuDocumentsByFirstContentContains(words, new PageRequest(1, 5));
+        List<TimuDocument> timuDocumentsByFirstContentContaining = timuDocumentRepository.findTimuDocumentsByFirstContentLike(words);
+        Page<TimuDocument> timuDocumentsByFirstContentLike1 = timuDocumentRepository.findTimuDocumentsByFirstContentLike(words, new PageRequest(1, 5));
+        return JSON.toJSON(timuDocumentsByFirstContentLike1);
     }
 
     @RequestMapping("/findMath")
