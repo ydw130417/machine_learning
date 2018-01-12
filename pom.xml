@@ -74,7 +74,12 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.44</version>
 		</dependency>
-
+		<!--百度图片文字识别-->
+		<dependency>
+			<groupId>com.baidu.aip</groupId>
+			<artifactId>java-sdk</artifactId>
+			<version>3.3.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
