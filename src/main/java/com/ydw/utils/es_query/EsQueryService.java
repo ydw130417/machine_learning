@@ -61,7 +61,7 @@ public class EsQueryService {
     public Page<TimuDocument> findDocumentsByPage(String keyWords, PageRequest pageRequest){
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
         nativeSearchQueryBuilder.withQuery(buildQuery(keyWords));
-//        nativeSearchQueryBuilder.withPageable(pageRequest);
+        // 不能够使用,如果分页的话则会把最佳的放在最后面:nativeSearchQueryBuilder .withPageable(pageRequest);
         NativeSearchQuery build = nativeSearchQueryBuilder.build();
         Page<TimuDocument> documents = timuDocumentRepository.search(build);
         return documents;
@@ -74,12 +74,7 @@ public class EsQueryService {
      * @return
      */
     public QueryBuilder buildQuery(String keyWords){
-//        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-//        searchFields.stream().forEach(s -> boolQueryBuilder.should(QueryBuilders.matchQuery(s,keyWords)));
-//        return boolQueryBuilder;
-
         return QueryBuilders.multiMatchQuery(keyWords, esProperties.getSearchFields());
-
     }
 
 
