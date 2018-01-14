@@ -3,8 +3,6 @@ package com.ydw.config.es;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * @author HYL
  * @create 2018-01-14 下午8:41
@@ -14,7 +12,7 @@ import java.util.List;
 public class EsProperties {
     private String indexName;
     private String typeName;
-    private List<String> searchFields;
+    private String[] searchFields;
 
     public String getIndexName() {
         return indexName;
@@ -32,11 +30,11 @@ public class EsProperties {
         this.typeName = typeName;
     }
 
-    public List<String> getSearchFields() {
+    public String[] getSearchFields() {
         return searchFields;
     }
 
-    public void setSearchFields(List<String> searchFields) {
+    public void setSearchFields(String[] searchFields) {
         this.searchFields = searchFields;
     }
 }

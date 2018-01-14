@@ -5,6 +5,7 @@ import com.ydw.model.es_model.TimuDocument;
 import com.ydw.model.jpa_model.Base_timu_search;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
+import com.ydw.utils.es_query.EsQueryService;
 import org.elasticsearch.client.transport.TransportClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,9 @@ public class IndexController {
     @Autowired
     TransportClient client;
 
+    @Autowired
+    private EsQueryService esQueryService;
+
 
     @RequestMapping("/page")
     public @ResponseBody
@@ -42,39 +46,14 @@ public class IndexController {
     @RequestMapping("/batchSave")
     public @ResponseBody
     Iterable<TimuDocument> batchSave(Integer index, Integer limit) {
-        timuDocumentRepository.deleteAll();
-        limit = limit == null ? 10 : limit;
-        index = index == null ? 1 : index;
-        findByPage(index, limit).parallelStream().forEach(base_timu_search -> {
-            TimuDocument timuDocument = new TimuDocument();
-            String searchContent = base_timu_search.getTrunk() + base_timu_search.getInput_choice_json();
-            timuDocument.setFirstContent(searchContent);
-            timuDocument.setId(base_timu_search.getId());
-            TimuDocument save = timuDocumentRepository.save(timuDocument);
-            System.out.println(save);
-        });
         return timuDocumentRepository.findAll();
     }
 
     @RequestMapping("/findByKeyWords")
-    public @ResponseBody
-    Object findByKeyWords(String words) {
+    public @ResponseBody Object findByKeyWords(String words) {
         System.out.println(words);
-//        SearchResponse searchResponse = client.prepareSearch("lesprint")
-//                .setTypes("timu")
-//                .setQuery(
-//                        QueryBuilders.boolQuery()
-//                                .must(QueryBuilders.matchQuery("firstContent", words))
-//                )
-//                .setFrom(0)
-//                .setSize(5)
-//                .setExplain(false)
-//                .get();
-//        SearchHit[] hits = searchResponse.getHits().getHits();
-        Page<TimuDocument> timuDocumentsByFirstContentLike = timuDocumentRepository.findTimuDocumentsByFirstContentContains(words, new PageRequest(1, 5));
-        List<TimuDocument> timuDocumentsByFirstContentContaining = timuDocumentRepository.findTimuDocumentsByFirstContentLike(words);
-        Page<TimuDocument> timuDocumentsByFirstContentLike1 = timuDocumentRepository.findTimuDocumentsByFirstContentLike(words, new PageRequest(1, 5));
-        return JSON.toJSON(timuDocumentsByFirstContentLike1);
+        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words, new PageRequest(1, 5));
+        return JSON.toJSON(documentsByPage);
     }
 
     @RequestMapping("/findMath")
