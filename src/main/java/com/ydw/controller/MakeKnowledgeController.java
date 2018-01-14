@@ -5,8 +5,10 @@ import com.ydw.model.jpa_model.Base_timu_search;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
 import com.ydw.utils.baidu.BaituUtils;
+import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,6 +34,9 @@ public class MakeKnowledgeController {
 
     @Autowired
     TimuDocumentRepository timuDocumentRepository;
+
+    @Autowired
+    EsQueryService esQueryService;
 
 
     @PostMapping("/findTimu")
@@ -66,6 +72,12 @@ public class MakeKnowledgeController {
             e.printStackTrace();
         }
         return  "upload";
+    }
+    @GetMapping("/searchTest")
+    @ResponseBody
+    public String search(String keyWords){
+        List<TimuDocument> timusByKeyWords = esQueryService.findTimusByKeyWords(keyWords);
+        return "ok";
     }
 
 }
