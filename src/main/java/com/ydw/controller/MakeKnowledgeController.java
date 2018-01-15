@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -51,7 +52,20 @@ public class MakeKnowledgeController {
 
 
     @PostMapping("/upload")
-    public @ResponseBody String upLoadFiles(Make_File make_file, HttpServletRequest request){
+    public @ResponseBody String upLoadFiles(MultipartFile first, MultipartFile second,MultipartFile third,String timuId,HttpServletRequest request){
+        Make_File make_file = new Make_File();
+        if (timuId!=null) {
+            make_file.setTimuId(timuId);
+        }
+        if (first!=null) {
+            make_file.setFist(first);
+        }
+        if (second!=null) {
+            make_file.setSecond(second);
+        }
+        if (third!=null) {
+            make_file.setThird(third);
+        }
         System.out.println(make_file);
         String templePath="/Users/mac/Pictures/uplad/";
         boolean b = makeService.makeDocumentInfo(make_file, templePath);
