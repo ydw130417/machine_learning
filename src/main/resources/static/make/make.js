@@ -19,14 +19,14 @@ layui.use(['form','upload'], function () {
             success: function (data) {
                 console.log(data);
                 var  str=data;
-                var timuId = str.toString().split("/")[5].split(".")[0];
+                timuId = str.toString().split("/")[5].split(".")[0];
                 console.log(timuId);
                 timuId=timuId;
+                $("#timuId").val(timuId);
                 $("#timu").attr('src',data);
             }
-        })
+        });
         return false;
     });
-
 
 });

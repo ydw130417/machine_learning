@@ -23,6 +23,13 @@ public class TimuDocument {
     @Field(type = FieldType.text, index = true, searchAnalyzer = "ik_max_word", analyzer = "ik_max_word")
     private String firveContent;
 
+    public TimuDocument() {
+    }
+
+    public TimuDocument(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
