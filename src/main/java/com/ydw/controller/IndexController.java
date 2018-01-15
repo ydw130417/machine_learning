@@ -3,8 +3,11 @@ package com.ydw.controller;
 import com.alibaba.fastjson.JSON;
 import com.ydw.model.es_model.TimuDocument;
 import com.ydw.model.jpa_model.Base_timu_search;
+import com.ydw.model.jpa_model.Machine;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
+import com.ydw.repository.jap_repository.MachineRepository;
+import com.ydw.service.oss.OssService;
 import com.ydw.utils.es_query.EsQueryService;
 import org.elasticsearch.client.transport.TransportClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,12 @@ public class IndexController {
 
     @Autowired
     private EsQueryService esQueryService;
+
+    @Autowired
+    private OssService ossService;
+
+    @Autowired
+    private MachineRepository machineRepository;
 
 
     @RequestMapping("/page")
@@ -73,11 +82,17 @@ public class IndexController {
             if (content.size() > 0) {
                 content.parallelStream().forEach(x -> {
                     String id = x.getId();
-                    String trunk = x.getTrunk();
-                    String input_choice_json = x.getInput_choice_json();
-                    TimuDocument timuDocument = new TimuDocument(id);
-                    timuDocument.setFirstContent(trunk + input_choice_json);
-                    timuDocumentRepository.save(timuDocument);
+                    Machine machine = new Machine(id);
+                    if (ossService.isHtmlExist(id)) {
+                        String trunk = x.getTrunk();
+                        String input_choice_json = x.getInput_choice_json();
+                        TimuDocument timuDocument = new TimuDocument(id);
+                        timuDocument.setFirstContent(trunk + input_choice_json);
+                        timuDocumentRepository.save(timuDocument);
+                        machine.setTemplate1(1L);
+                        machine.setInedex(1L);
+                    }
+                    machineRepository.save(machine);
                 });
             }
             index++;

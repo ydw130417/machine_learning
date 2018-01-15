@@ -6,7 +6,7 @@ import com.ydw.model.jpa_model.Base_timu_search;
 import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
-import com.ydw.service.MakeService;
+import com.ydw.service.make.MakeService;
 import com.ydw.utils.baidu.BaituUtils;
 import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;

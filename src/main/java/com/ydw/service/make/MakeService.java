@@ -1,4 +1,4 @@
-package com.ydw.service;
+package com.ydw.service.make;
 
 import com.ydw.function.TwoParamConsumer;
 import com.ydw.model.es_model.TimuDocument;
