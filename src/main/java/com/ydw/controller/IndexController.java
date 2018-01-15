@@ -39,7 +39,7 @@ public class IndexController {
     @RequestMapping("/page")
     public @ResponseBody
     List<Base_timu_search> findByPage(Integer index, Integer limit) {
-        return baseTimuSearchRepository.findAll(PageRequest.of(index,limit)).getContent();
+        return baseTimuSearchRepository.findAll(PageRequest.of(index, limit)).getContent();
     }
 
     @RequestMapping("/batchSave")
@@ -49,15 +49,39 @@ public class IndexController {
     }
 
     @RequestMapping("/findByKeyWords")
-    public @ResponseBody Object findByKeyWords(String words) {
+    public @ResponseBody
+    Object findByKeyWords(String words) {
         System.out.println(words);
-        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words, PageRequest.of(1,5));
+        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words, PageRequest.of(1, 5));
         return JSON.toJSON(documentsByPage);
     }
 
     @RequestMapping("/findMath")
     public @ResponseBody
-    Page<Base_timu_search> findMath(Integer index, Integer pageSize){
-        return baseTimuSearchRepository.findBase_timu_searchesBySubjectIdEquals(2L, PageRequest.of(index,pageSize));
+    Page<Base_timu_search> findMath(Integer index, Integer pageSize) {
+        return baseTimuSearchRepository.findBase_timu_searchesBySubjectIdEquals(2L, PageRequest.of(index, pageSize));
+    }
+
+    @RequestMapping("/buildMath")
+    public String buildMath() {
+        Integer index = 1;
+        Page<Base_timu_search> base_timu_searchesBySubjectIdEquals = baseTimuSearchRepository.findBase_timu_searchesBySubjectIdEquals(2L, PageRequest.of(index, 1000));
+        List<Base_timu_search> content = base_timu_searchesBySubjectIdEquals.getContent();
+        while (index<=50) {
+            base_timu_searchesBySubjectIdEquals = baseTimuSearchRepository.findBase_timu_searchesBySubjectIdEquals(2L, PageRequest.of(index, 1000));
+            content = base_timu_searchesBySubjectIdEquals.getContent();
+            if (content.size() > 0) {
+                content.parallelStream().forEach(x -> {
+                    String id = x.getId();
+                    String trunk = x.getTrunk();
+                    String input_choice_json = x.getInput_choice_json();
+                    TimuDocument timuDocument = new TimuDocument(id);
+                    timuDocument.setFirstContent(trunk + input_choice_json);
+                    timuDocumentRepository.save(timuDocument);
+                });
+            }
+            index++;
+        }
+        return "生成完成";
     }
 }

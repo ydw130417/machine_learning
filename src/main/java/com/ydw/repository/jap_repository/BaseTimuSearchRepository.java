@@ -27,4 +27,5 @@ public interface BaseTimuSearchRepository extends JpaRepository<Base_timu_search
      Base_timu_search findFirstByTrunkLike(String keyWords);
 
      Base_timu_search findFirstByTrunkContains(String keywords);
+
 }
