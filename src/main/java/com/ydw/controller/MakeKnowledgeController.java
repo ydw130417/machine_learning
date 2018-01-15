@@ -54,15 +54,23 @@ public class MakeKnowledgeController {
 
     @PostMapping("/upload")
     public @ResponseBody String upLoadFiles(MultipartFile first, MultipartFile second,MultipartFile third,String timuId,HttpServletRequest request){
-        Make_File make_file = new Make_File();
-        YdwUtils.filterNull(timuId,make_file,(x,y)->y.setTimuId(x));
-        YdwUtils.filterNull(first,make_file,(x,y)->y.setFist(x));
-        YdwUtils.filterNull(second,make_file,(x,y)->y.setSecond(x));
-        YdwUtils.filterNull(third,make_file,(x,y)->y.setThird(x));
-        System.out.println(make_file);
-        String templePath="/Users/mac/Pictures/uplad/";
-        boolean b = makeService.makeDocumentInfo(make_file, templePath);
-        return  b?"success":"fail";
+        String message="";
+        if (timuId!=null&&!timuId.equalsIgnoreCase("")) {
+            System.out.println(timuId);
+            Make_File make_file = new Make_File();
+            YdwUtils.filterNull(timuId,make_file,(x,y)->y.setTimuId(x));
+            YdwUtils.filterNull(first,make_file,(x,y)->y.setFist(x));
+            YdwUtils.filterNull(second,make_file,(x,y)->y.setSecond(x));
+            YdwUtils.filterNull(third,make_file,(x,y)->y.setThird(x));
+            System.out.println(make_file);
+            String templePath="/Users/mac/Pictures/uplad/";
+            boolean b = makeService.makeDocumentInfo(make_file, templePath);
+            String s = b ? "success" : "fail";
+            message=s;
+        }else {
+            message="请先完成题目的查询";
+        }
+        return message;
     }
 
 

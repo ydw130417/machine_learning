@@ -108,6 +108,7 @@
         // jquery 表单提交
         $("#images").ajaxSubmit(function(message) {
             console.log(message);
+            layer.alert(message);
         });
         return false;
     }
@@ -117,7 +118,7 @@
         if (objUrl) {
             $(this).parents('.load_img').find('img').attr("src", objUrl);
         }
-    })
+    });
 
     function getObjectURL(file) {
         var url = null;
