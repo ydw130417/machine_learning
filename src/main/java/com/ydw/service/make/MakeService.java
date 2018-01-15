@@ -5,7 +5,7 @@ import com.ydw.model.es_model.TimuDocument;
 import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
-import com.ydw.utils.baidu.BaituUtils;
+import com.ydw.utils.baidu.BaiduUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +25,7 @@ public class MakeService {
     BaseTimuSearchRepository baseTimuSearchRepository;
 
     @Autowired
-    BaituUtils baituUtils;
+    BaiduUtils baituUtils;
 
     @Autowired
     TimuDocumentRepository timuDocumentRepository;

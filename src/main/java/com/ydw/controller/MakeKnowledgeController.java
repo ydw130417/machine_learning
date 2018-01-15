@@ -7,7 +7,7 @@ import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
 import com.ydw.service.make.MakeService;
-import com.ydw.utils.baidu.BaituUtils;
+import com.ydw.utils.baidu.BaiduUtils;
 import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,8 +30,7 @@ public class MakeKnowledgeController {
     @Autowired
     BaseTimuSearchRepository baseTimuSearchRepository;
 
-    @Autowired
-    BaituUtils baituUtils;
+
 
     @Autowired
     TimuDocumentRepository timuDocumentRepository;
@@ -42,6 +41,8 @@ public class MakeKnowledgeController {
     @Autowired
     MakeService makeService;
 
+    @Autowired
+    BaiduUtils baituUtils;
 
     @PostMapping("/findTimu")
     public @ResponseBody String findTimu(String words){

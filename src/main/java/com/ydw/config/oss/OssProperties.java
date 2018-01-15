@@ -70,7 +70,7 @@ public class OssProperties {
     }
 
     @Bean
-    public OSSClient getClient(){
+    public OSSClient getOSSClient(){
         return new OSSClient(endPoint, access_id, access_key);
     }
 }

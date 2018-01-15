@@ -19,7 +19,7 @@ public class BaiduOcrConfig {
     private String SECRET;
 
     @Bean
-    public AipOcr getClient() {
+    public AipOcr getAipOcr() {
         return new AipOcr(APPID, KEY, SECRET);
     }
 

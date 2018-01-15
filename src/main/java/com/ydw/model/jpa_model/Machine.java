@@ -14,6 +14,8 @@ public class Machine {
     this.timuid = timuid;
   }
 
+  public Machine() {
+  }
 
   public String getTimuid() {
     return timuid;
