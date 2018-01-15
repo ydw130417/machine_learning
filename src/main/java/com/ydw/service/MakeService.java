@@ -71,17 +71,22 @@ public class MakeService {
             file.transferTo(templeFile);
             String contentByImgPath = baituUtils.getContentByImgPath(templeFile.getAbsolutePath());
             Optional<TimuDocument> byId = timuDocumentRepository.findById(timuId);
+            //题目识别内容需要非空校验
+        if (contentByImgPath!=null) {
             if (byId.isPresent()) {
                 //如果题目存在则更新第一个搜索内容
                 TimuDocument timuDocument = byId.get();
-                step1.accept(contentByImgPath, timuDocument);
+                    step1.accept(contentByImgPath, timuDocument);
                 timuDocumentRepository.save(timuDocument);
             }else {
                 //如果这个文档不存在,先去数据库查询所有的信息,完善Document然后执行保存
                 TimuDocument timuDocument = new TimuDocument(timuId);
-                step1.accept(contentByImgPath,timuDocument);
+                    step1.accept(contentByImgPath,timuDocument);
                 timuDocumentRepository.save(timuDocument);
             }
+        }else {
+            throw new RuntimeException(filename+"图片识别为空");
+        }
     }
 
 }

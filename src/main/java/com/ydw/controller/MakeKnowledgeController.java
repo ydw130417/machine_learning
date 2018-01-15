@@ -1,5 +1,6 @@
 package com.ydw.controller;
 
+import com.ydw.common.YdwUtils;
 import com.ydw.model.es_model.TimuDocument;
 import com.ydw.model.jpa_model.Base_timu_search;
 import com.ydw.model.para.Make_File;
@@ -54,18 +55,10 @@ public class MakeKnowledgeController {
     @PostMapping("/upload")
     public @ResponseBody String upLoadFiles(MultipartFile first, MultipartFile second,MultipartFile third,String timuId,HttpServletRequest request){
         Make_File make_file = new Make_File();
-        if (timuId!=null) {
-            make_file.setTimuId(timuId);
-        }
-        if (first!=null) {
-            make_file.setFist(first);
-        }
-        if (second!=null) {
-            make_file.setSecond(second);
-        }
-        if (third!=null) {
-            make_file.setThird(third);
-        }
+        YdwUtils.filterNull(timuId,make_file,(x,y)->y.setTimuId(x));
+        YdwUtils.filterNull(first,make_file,(x,y)->y.setFist(x));
+        YdwUtils.filterNull(second,make_file,(x,y)->y.setSecond(x));
+        YdwUtils.filterNull(third,make_file,(x,y)->y.setThird(x));
         System.out.println(make_file);
         String templePath="/Users/mac/Pictures/uplad/";
         boolean b = makeService.makeDocumentInfo(make_file, templePath);
