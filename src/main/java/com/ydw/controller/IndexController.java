@@ -39,8 +39,7 @@ public class IndexController {
     @RequestMapping("/page")
     public @ResponseBody
     List<Base_timu_search> findByPage(Integer index, Integer limit) {
-        PageRequest pageRequest = new PageRequest(index, limit);
-        return baseTimuSearchRepository.findAll(pageRequest).getContent();
+        return baseTimuSearchRepository.findAll(PageRequest.of(index,limit)).getContent();
     }
 
     @RequestMapping("/batchSave")
@@ -52,13 +51,13 @@ public class IndexController {
     @RequestMapping("/findByKeyWords")
     public @ResponseBody Object findByKeyWords(String words) {
         System.out.println(words);
-        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words, new PageRequest(1, 5));
+        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words, PageRequest.of(1,5));
         return JSON.toJSON(documentsByPage);
     }
 
     @RequestMapping("/findMath")
     public @ResponseBody
     Page<Base_timu_search> findMath(Integer index, Integer pageSize){
-        return baseTimuSearchRepository.findBase_timu_searchesBySubjectIdEquals(2L, new PageRequest(index, pageSize));
+        return baseTimuSearchRepository.findBase_timu_searchesBySubjectIdEquals(2L, PageRequest.of(index,pageSize));
     }
 }

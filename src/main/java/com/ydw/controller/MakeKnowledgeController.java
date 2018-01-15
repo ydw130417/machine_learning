@@ -7,6 +7,7 @@ import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
 import com.ydw.utils.baidu.BaituUtils;
 import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,6 +74,12 @@ public class MakeKnowledgeController {
         }
         return  "upload";
     }
+
+    /**
+     * multyQuery
+     * @param keyWords
+     * @return
+     */
     @GetMapping("/searchTest")
     @ResponseBody
     public String search(String keyWords){
@@ -80,4 +87,16 @@ public class MakeKnowledgeController {
         return "ok";
     }
 
+
+    /**
+     * booleanQuery
+     * @param keyWords
+     * @return
+     */
+    @GetMapping("/searchByBoolean")
+    @ResponseBody
+    public List<TimuDocument> searchByBoolean(String keyWords){
+        Page<TimuDocument> documentsByBoolean = esQueryService.findDocumentsByBoolean(keyWords);
+        return documentsByBoolean.getContent();
+    }
 }
