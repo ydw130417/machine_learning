@@ -9,13 +9,13 @@ layui.use(['form','upload'], function () {
 
     //监听提交
     form.on('submit(go)', function (data) {
-        var words=data.field.words;
-        console.log(words);
+        var id=data.field.id;
+        console.log(id);
         $.ajax({
             method:"post",
             type: "post",
-            url: "make/findTimu",
-            data: {"words": words},
+            url: "make/findId",
+            data: {"id": id},
             success: function (data) {
                 console.log(data);
                 var  str=data;

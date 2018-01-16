@@ -7,6 +7,7 @@ import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
 import com.ydw.service.make.MakeService;
+import com.ydw.service.oss.OssService;
 import com.ydw.utils.baidu.BaiduUtils;
 import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,29 @@ public class MakeKnowledgeController {
     @Autowired
     BaiduUtils baituUtils;
 
+    @Autowired
+    OssService ossService;
+
     @PostMapping("/findTimu")
     public @ResponseBody String findTimu(String words){
         String htmlUrl="http://queshtml.51sprint.com/version5/template1/";
         Base_timu_search base_timu_search = baseTimuSearchRepository.findFirstByTrunkContains(words);
         String id = base_timu_search.getId();
         return htmlUrl+id+".html";
+    }
+
+    @PostMapping("/findId")
+    @ResponseBody
+    public String findTimuById(String id){
+        String htmlUrl="http://queshtml.51sprint.com/version5/template1/";
+
+        String s = null;
+        if (!ossService.isHtmlExist(id)) {
+            id="nocorrect";
+        }
+        s = htmlUrl + id + ".html";
+
+        return s;
     }
 
 
