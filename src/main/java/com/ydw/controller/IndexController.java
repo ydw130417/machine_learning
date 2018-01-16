@@ -15,10 +15,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by ydw on 2018/1/10.
@@ -100,5 +103,32 @@ public class IndexController {
             index++;
         }
         return "生成完成";
+    }
+
+    @GetMapping("/build/{id}")
+    @ResponseBody
+    public String buildById(@PathVariable String id){
+        Optional<Base_timu_search> baseTimuSearch = baseTimuSearchRepository.findById(id);
+        String message="ok";
+        try {
+            baseTimuSearch.ifPresent(x->{
+                String timuId = x.getId();
+                //判断是否已经生产了索引
+                if (!timuDocumentRepository.existsById(timuId)) {
+                    //没有产生索引,判断是否有对应的静态页
+                    if (ossService.isHtmlExist(timuId)) {
+                        //静态页面存在的话,然后才进行做索引
+                        TimuDocument timuDocument = new TimuDocument(id);
+                        String content = x.getTrunk() + x.getInput_choice_json();
+                        timuDocument.setFirstContent(content);
+                        timuDocumentRepository.save(timuDocument);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            message="somethingWrong!";
+        }
+        return message;
     }
 }
