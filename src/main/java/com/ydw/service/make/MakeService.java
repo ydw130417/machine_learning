@@ -2,13 +2,16 @@ package com.ydw.service.make;
 
 import com.ydw.function.TwoParamConsumer;
 import com.ydw.model.es_model.TimuDocument;
+import com.ydw.model.jpa_model.Machine;
 import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
+import com.ydw.repository.jap_repository.MachineRepository;
 import com.ydw.utils.baidu.BaiduUtils;
 import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,6 +25,7 @@ import java.util.Optional;
  * @create 2018-01-15 上午10:13
  **/
 @Service
+@Transactional
 public class MakeService {
 
     @Autowired
@@ -35,6 +39,9 @@ public class MakeService {
 
     @Autowired
     EsQueryService esQueryService;
+
+    @Autowired
+    MachineRepository machineRepository;
 
     /**
      * 更新索引信息
@@ -50,16 +57,33 @@ public class MakeService {
         String timuId = make_file.getTimuId();
         //第二步:使用百度文字识别接口,获取搜索内容
         //第三步:更新索引内容
+        //第四步:更新Machine表中的各个字段
+        Optional<Machine> machineOptional = machineRepository.findById(timuId);
+        final Machine[] machines = {new Machine(timuId)};
+        machineOptional.ifPresent(x-> machines[0] =x);
         try {
             if (fist != null) {
-                dealFile(fist, timuId, imgPath, (x, y) -> y.setFirstContent(x));
+                dealFile(fist, timuId, imgPath, (x, y) -> {
+                    y.setFirstContent(x);
+                    machines[0].setFirstcontent(x);
+                    machines[0].setFirstpic(imgPath+fist.getOriginalFilename());
+                });
             }
             if (second != null) {
-                dealFile(second, timuId, imgPath, (x, y) -> y.setSecondContent(x));
+                dealFile(second, timuId, imgPath, (x, y) -> {
+                    y.setSecondContent(x);
+                    machines[0].setSecondcontent(x);
+                    machines[0].setSecondpic(imgPath+second.getOriginalFilename());
+                });
             }
             if (third != null) {
-                dealFile(third, timuId, imgPath, (x, y) -> y.setThirdContent(x));
+                dealFile(third, timuId, imgPath, (x, y) -> {
+                    y.setThirdContent(x);
+                    machines[0].setThirdcontent(x);
+                    machines[0].setThirdpic(imgPath+third.getOriginalFilename());
+                });
             }
+            machineRepository.save(machines[0]);
             flag = true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,11 +132,9 @@ public class MakeService {
         String contentByImgPath = baituUtils.getContentByImgPath(imgRealPath);
         System.out.println("图片识别的内容:"+contentByImgPath);
         if (contentByImgPath != null&&!contentByImgPath.equals("")) {
-//            Page<TimuDocument> documentsByBoolean = esQueryService.findDocumentsByBoolean(contentByImgPath);
-//            list=documentsByBoolean.getContent();
            list= esQueryService.findFinalRestult(contentByImgPath);
         }
-        
+
         return list;
     }
 

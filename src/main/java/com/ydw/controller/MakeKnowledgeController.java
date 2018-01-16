@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by ydw on 2018/1/12.
@@ -130,9 +131,9 @@ public class MakeKnowledgeController {
 
     @PostMapping("/search")
     @ResponseBody
-    public List<TimuDocument> search(MultipartFile pic){
+    public List<String> search(MultipartFile pic){
         String templePath="/Users/mac/Pictures/uplad/";
         List<TimuDocument> timuDocuments = makeService.findByPic(pic, templePath);
-        return timuDocuments;
+        return timuDocuments.parallelStream().map(TimuDocument::getId).collect(Collectors.toList());
     }
 }
