@@ -35,4 +35,16 @@ public class MachineLearningApplicationTests {
 		machineRepository.findById("123").ifPresent(System.out::println);
 	}
 
+	@Test
+	public void testInstance(){
+		try {
+			Machine machine = machineRepository.newInstance(new Machine(), "1234");
+			System.out.println(machine);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

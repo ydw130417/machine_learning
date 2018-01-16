@@ -92,7 +92,14 @@ public class MakeKnowledgeController {
             YdwUtils.filterNull(third, make_file, (x, y) -> y.setThird(x));
             System.out.println(make_file);
             String templePath = "/Users/mac/Pictures/uplad/";
-            boolean b = makeService.makeDocumentInfo(make_file, templePath);
+            boolean b = false;
+            try {
+                b = makeService.makeDocumentInfo(make_file, templePath);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             String s = b ? "success" : "fail";
             message = s;
         } else {

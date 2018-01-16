@@ -48,7 +48,7 @@ public class MakeService {
      *
      * @return
      */
-    public boolean makeDocumentInfo(Make_File make_file, String imgPath) {
+    public boolean makeDocumentInfo(Make_File make_file, String imgPath) throws InstantiationException, IllegalAccessException {
         Boolean flag = false;
         //第一步:解析图片,然后保存图片
         MultipartFile fist = make_file.getFist();
@@ -58,9 +58,7 @@ public class MakeService {
         //第二步:使用百度文字识别接口,获取搜索内容
         //第三步:更新索引内容
         //第四步:更新Machine表中的各个字段
-        Optional<Machine> machineOptional = machineRepository.findById(timuId);
-        final Machine[] machines = {new Machine(timuId)};
-        machineOptional.ifPresent(x-> machines[0] =x);
+        final Machine[] machines = {machineRepository.newInstance(new Machine(),timuId)};
         try {
             if (fist != null) {
                 dealFile(fist, timuId, imgPath, (x, y) -> {
