@@ -66,7 +66,7 @@ public class IndexController {
     public @ResponseBody
     Object findByKeyWords(String words) {
         System.out.println(words);
-        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words, PageRequest.of(1, 5));
+        Page<TimuDocument> documentsByPage = esQueryService.findDocumentsByPage(words);
         return JSON.toJSON(documentsByPage);
     }
 
@@ -113,13 +113,18 @@ public class IndexController {
         try {
             baseTimuSearch.ifPresent(x->{
                 String timuId = x.getId();
+                System.out.println(id);
                 //判断是否已经生产了索引
-                if (!timuDocumentRepository.existsById(timuId)) {
+                System.out.println(!timuDocumentRepository.existsById(timuId));
+                //这个有点混乱,如果不存在返回的是true,存在返回的是false
+                if (timuDocumentRepository.existsById(timuId)) {
                     //没有产生索引,判断是否有对应的静态页
+                    System.out.println(ossService.isHtmlExist(timuId));
                     if (ossService.isHtmlExist(timuId)) {
                         //静态页面存在的话,然后才进行做索引
                         TimuDocument timuDocument = new TimuDocument(id);
                         String content = x.getTrunk() + x.getInput_choice_json();
+                        System.out.println(content);
                         timuDocument.setFirstContent(content);
                         timuDocumentRepository.save(timuDocument);
                     }
