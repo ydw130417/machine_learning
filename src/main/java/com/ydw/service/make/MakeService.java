@@ -1,5 +1,6 @@
 package com.ydw.service.make;
 
+import com.ydw.function.ThreeParamConsumer;
 import com.ydw.function.TwoParamConsumer;
 import com.ydw.model.es_model.TimuDocument;
 import com.ydw.model.jpa_model.Machine;
@@ -7,6 +8,7 @@ import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
 import com.ydw.repository.jap_repository.MachineRepository;
+import com.ydw.service.oss.OssService;
 import com.ydw.utils.baidu.BaiduUtils;
 import com.ydw.utils.es_query.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class MakeService {
     @Autowired
     MachineRepository machineRepository;
 
+    @Autowired
+    OssService ossService;
+
     /**
      * 更新索引信息
      *
@@ -61,24 +66,24 @@ public class MakeService {
         final Machine[] machines = {machineRepository.newInstance(new Machine(),timuId)};
         try {
             if (fist != null) {
-                dealFile(fist, timuId, imgPath, (x, y) -> {
+                dealFile(fist, timuId, imgPath, (u,x, y) -> {
                     y.setFirstContent(x);
                     machines[0].setFirstcontent(x);
-                    machines[0].setFirstpic(imgPath+fist.getOriginalFilename());
+                    machines[0].setFirstpic(u);
                 });
             }
             if (second != null) {
-                dealFile(second, timuId, imgPath, (x, y) -> {
+                dealFile(second, timuId, imgPath, (u,x, y) -> {
                     y.setSecondContent(x);
                     machines[0].setSecondcontent(x);
-                    machines[0].setSecondpic(imgPath+second.getOriginalFilename());
+                    machines[0].setSecondpic(u);
                 });
             }
             if (third != null) {
-                dealFile(third, timuId, imgPath, (x, y) -> {
+                dealFile(third, timuId, imgPath, (u,x, y) -> {
                     y.setThirdContent(x);
                     machines[0].setThirdcontent(x);
-                    machines[0].setThirdpic(imgPath+third.getOriginalFilename());
+                    machines[0].setThirdpic(u);
                 });
             }
             machineRepository.save(machines[0]);
@@ -91,13 +96,17 @@ public class MakeService {
         return flag;
     }
 
-    private void dealFile(MultipartFile file, String timuId, String templePath, TwoParamConsumer<String, TimuDocument> step1) throws IOException {
+    private void dealFile(MultipartFile file, String timuId, String templePath, ThreeParamConsumer<String,String, TimuDocument> step1) throws IOException {
         if (file == null) {
             return;
         }
         String filename = file.getOriginalFilename();
         File templeFile = new File(templePath + filename);
+        //把multipartFile-->File
         file.transferTo(templeFile);
+        //上传图片
+        String url = ossService.uploadFile(templeFile, filename, timuId);
+        System.out.println(url);
         String contentByImgPath = baituUtils.getContentByImgPath(templeFile.getAbsolutePath());
         Optional<TimuDocument> byId = timuDocumentRepository.findById(timuId);
         //题目识别内容需要非空校验
@@ -105,12 +114,12 @@ public class MakeService {
             if (byId.isPresent()) {
                 //如果题目存在则更新第一个搜索内容
                 TimuDocument timuDocument = byId.get();
-                step1.accept(contentByImgPath, timuDocument);
+                step1.accept(url,contentByImgPath, timuDocument);
                 timuDocumentRepository.save(timuDocument);
             } else {
                 //如果这个文档不存在,先去数据库查询所有的信息,完善Document然后执行保存
                 TimuDocument timuDocument = new TimuDocument(timuId);
-                step1.accept(contentByImgPath, timuDocument);
+                step1.accept(url,contentByImgPath, timuDocument);
                 timuDocumentRepository.save(timuDocument);
             }
         } else {

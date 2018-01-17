@@ -94,7 +94,8 @@ public class MakeKnowledgeController {
             YdwUtils.filterNull(second, make_file, (x, y) -> y.setSecond(x));
             YdwUtils.filterNull(third, make_file, (x, y) -> y.setThird(x));
             System.out.println(make_file);
-            String templePath = "/Users/mac/Pictures/uplad/";
+            String templePath = request.getSession().getServletContext().getRealPath("/");
+            System.out.println(templePath);
             boolean b = false;
             try {
                 b = makeService.makeDocumentInfo(make_file, templePath);

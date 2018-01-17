@@ -20,6 +20,28 @@ public class OssProperties {
     private String bucket_name;
     private String endPoint;
     private String htmlEndPoint;
+    private String picPoint;
+    /**
+     * 题目关联图片的文件地址
+     */
+    private final static String MACHINE_PIC_DIR="machine/timu/";
+
+    /**
+     * 获取机器学习题目图片的上传路径和下载路径
+     * @param timuId
+     * @return
+     */
+    public static String getMachinePicDir(String timuId){
+        return MACHINE_PIC_DIR+timuId+"/";
+    }
+
+    public String getPicPoint() {
+        return picPoint;
+    }
+
+    public void setPicPoint(String picPoint) {
+        this.picPoint = picPoint;
+    }
 
     public String getEndPoint() {
         return endPoint;

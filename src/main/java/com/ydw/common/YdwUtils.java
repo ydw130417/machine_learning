@@ -12,4 +12,13 @@ public class YdwUtils {
             consumer.accept(t,r);
         }
     }
+
+    /**
+     * 非空判断
+     * @param str
+     * @return
+     */
+    public static Boolean isBlank(String str){
+        return str==null||str.equals("");
+    }
 }
