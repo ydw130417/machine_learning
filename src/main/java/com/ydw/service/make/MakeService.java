@@ -147,4 +147,15 @@ public class MakeService {
         return templeFile;
     }
 
+    /**
+     * 返回一个Machine对象
+     * @param timuId
+     * @return
+     */
+    public Machine getMachineInfo(String timuId){
+        final Machine[] machine = {new Machine()};
+        machineRepository.findById(timuId).ifPresent(x-> machine[0] =x);
+        return machine[0];
+    }
+
 }

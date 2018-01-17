@@ -18,12 +18,16 @@ layui.use(['form','upload'], function () {
             data: {"id": id},
             success: function (data) {
                 console.log(data);
-                var  str=data;
+                var  str=data.templateUrl;
+                var machine=data.machine;
                 timuId = str.toString().split("/")[5].split(".")[0];
                 console.log(timuId);
                 timuId=timuId;
                 $("#timuId").val(timuId);
-                $("#timu").attr('src',data);
+                $("#timu").attr('src',str);
+                $("#firstImg").attr("src", machine.firstpic);
+                $("#secondImg").attr("src", machine.secondpic);
+                $("#thirdImg").attr("src", machine.thirdpic);
             }
         });
         return false;

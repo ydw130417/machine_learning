@@ -1,8 +1,10 @@
 package com.ydw.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ydw.common.YdwUtils;
 import com.ydw.model.es_model.TimuDocument;
 import com.ydw.model.jpa_model.Base_timu_search;
+import com.ydw.model.jpa_model.Machine;
 import com.ydw.model.para.Make_File;
 import com.ydw.repository.es_repository.TimuDocumentRepository;
 import com.ydw.repository.jap_repository.BaseTimuSearchRepository;
@@ -10,6 +12,7 @@ import com.ydw.service.make.MakeService;
 import com.ydw.service.oss.OssService;
 import com.ydw.utils.baidu.BaiduUtils;
 import com.ydw.utils.es_query.EsQueryService;
+import net.sf.json.util.JSONBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -57,18 +60,18 @@ public class MakeKnowledgeController {
 
     @PostMapping("/findId")
     @ResponseBody
-    public String findTimuById(String id) {
+    public JSONObject findTimuById(String id) {
         String htmlUrl = "http://queshtml.51sprint.com/version5/template1/";
-
         String s = null;
         if (!ossService.isHtmlExist(id)) {
             id = "nocorrect";
-        }else {
-
         }
         s = htmlUrl + id + ".html";
-
-        return s;
+        Machine machineInfo = makeService.getMachineInfo(id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("machine",machineInfo);
+        jsonObject.put("templateUrl",s);
+        return jsonObject;
     }
 
     @GetMapping("/document/{id}")
