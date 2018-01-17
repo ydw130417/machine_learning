@@ -64,7 +64,7 @@ public class MakeKnowledgeController {
         String htmlUrl = "http://queshtml.51sprint.com/version5/template1/";
         String s = null;
         if (!ossService.isHtmlExist(id)) {
-            id = "nocorrect";
+            id = "noData";
         }
         s = htmlUrl + id + ".html";
         Machine machineInfo = makeService.getMachineInfo(id);
